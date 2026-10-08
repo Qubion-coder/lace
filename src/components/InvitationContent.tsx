@@ -11,6 +11,7 @@ import { ThankYouSection } from './ThankYouSection';
 
 import { InviteeBanner } from './InviteeBanner';
 import { DeferredMount } from './DeferredMount';
+import { IntroVideoSection } from './IntroVideoSection';
 
 interface InvitationContentProps {
   active: boolean;
@@ -93,6 +94,10 @@ export function InvitationContent({
         <div className="py-24 sm:py-32 bg-brand-blush relative overflow-hidden">
           <RSVPForm inviteeName={fullInviteeName} eventName={eventLabel} eventParam={eventParam} />
         </div>
+      </DeferredMount>
+
+      <DeferredMount active={active} delay={450} minHeight="30vh">
+        <IntroVideoSection />
       </DeferredMount>
 
       <DeferredMount active={active} delay={480} minHeight="30vh">

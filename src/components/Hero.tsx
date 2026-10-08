@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'motion/react';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Play } from 'lucide-react';
 
 interface HeroProps {
   event?: string | null;
@@ -33,6 +33,7 @@ function useIsTouchDevice() {
 
 export const Hero: React.FC<HeroProps> = ({ event = 'both', inviteeName }) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const reducedMotion = usePrefersReducedMotion();
   const isTouch = useIsTouchDevice();
   const useParallax = !reducedMotion && !isTouch;
@@ -42,25 +43,42 @@ export const Hero: React.FC<HeroProps> = ({ event = 'both', inviteeName }) => {
   const scale = useTransform(scrollY, [0, 800], [1, 1.1]);
   const opacity = useTransform(scrollY, [0, 400], [1, 0]);
 
+  const [hasStartedPlay, setHasStartedPlay] = useState(false);
   const [videoEnded, setVideoEnded] = useState(false);
 
+  const togglePlay = () => {
+    if (videoRef.current) {
+      if (videoRef.current.paused || videoEnded) {
+        videoRef.current.currentTime = 0;
+        videoRef.current.play();
+        setHasStartedPlay(true);
+        setVideoEnded(false);
+      } else {
+        videoRef.current.pause();
+        setHasStartedPlay(false);
+      }
+    }
+  };
+
   return (
-    <div ref={containerRef} className="relative h-screen flex items-center justify-center overflow-hidden bg-brand-blush/30">
+    <div ref={containerRef} className="relative h-screen flex items-center justify-center overflow-hidden bg-brand-blush/30 group">
       <motion.div
-        className="absolute inset-0 z-0 origin-center"
+        className="absolute inset-0 z-0 origin-center cursor-pointer"
         style={useParallax ? { y: y1, scale } : undefined}
+        onClick={togglePlay}
       >
         <video
+          ref={videoRef}
           src="/intro.mp4"
           className="w-full h-full object-cover"
           style={{ objectPosition: 'center 20%' }}
-          autoPlay
           muted
           playsInline
           onEnded={(e) => {
              // Pauses exactly at the last frame
              e.currentTarget.pause();
              setVideoEnded(true);
+             setHasStartedPlay(false);
           }}
         />
       </motion.div>

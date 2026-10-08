@@ -1,8 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { AnimatePresence } from 'motion/react';
 import { Toaster } from 'sonner';
 
-import { WelcomeScreen } from './components/WelcomeScreen';
 import { InvitationContent } from './components/InvitationContent';
 import { Admin } from './components/Admin';
 import { INVITATION_IMAGE_URLS, preloadImages } from './utils/preloadImages';
@@ -10,8 +8,6 @@ import { INVITATION_IMAGE_URLS, preloadImages } from './utils/preloadImages';
 const isAdminRoute = () => window.location.pathname === '/admin';
 
 export default function App() {
-  const [showInvitation, setShowInvitation] = useState(false);
-  const [assetsReady, setAssetsReady] = useState(false);
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -29,11 +25,7 @@ export default function App() {
   useEffect(() => {
     if (isAdminRoute()) return;
 
-    let cancelled = false;
-
-    preloadImages([...INVITATION_IMAGE_URLS]).then(() => {
-      if (!cancelled) setAssetsReady(true);
-    });
+    preloadImages([...INVITATION_IMAGE_URLS]);
     
     // Preload video
     const videoLink = document.createElement('link');
@@ -41,10 +33,6 @@ export default function App() {
     videoLink.as = 'video';
     videoLink.href = '/intro.mp4';
     document.head.appendChild(videoLink);
-
-    return () => {
-      cancelled = true;
-    };
   }, []);
 
   const ensureAudio = useCallback(() => {
@@ -66,12 +54,6 @@ export default function App() {
     };
   }, []);
 
-  const handleMusicStart = useCallback(() => {
-    setIsMusicPlaying(true);
-    const audio = ensureAudio();
-    audio.play().catch(console.error);
-  }, [ensureAudio]);
-
   const toggleMusic = useCallback(() => {
     const audio = ensureAudio();
     if (isMusicPlaying) {
@@ -81,13 +63,6 @@ export default function App() {
     }
     setIsMusicPlaying((playing) => !playing);
   }, [ensureAudio, isMusicPlaying]);
-
-  const handleEnvelopeComplete = useCallback(() => {
-    requestAnimationFrame(() => {
-      window.scrollTo(0, 0);
-      setShowInvitation(true);
-    });
-  }, []);
 
   if (isAdminRoute()) {
     return (
@@ -103,7 +78,7 @@ export default function App() {
       <Toaster position="top-center" />
 
       <InvitationContent
-        active={showInvitation}
+        active={true}
         eventParam={eventParam}
         fullInviteeName={fullInviteeName}
         eventLabel={eventLabel}
@@ -111,17 +86,6 @@ export default function App() {
         isMusicPlaying={isMusicPlaying}
         onToggleMusic={toggleMusic}
       />
-
-      <AnimatePresence mode="wait">
-        {!showInvitation && (
-          <WelcomeScreen
-            key="welcome"
-            onComplete={handleEnvelopeComplete}
-            onMusicStart={handleMusicStart}
-            readyToTransition={assetsReady}
-          />
-        )}
-      </AnimatePresence>
       
       {/* Hidden video to force preload across all devices */}
       <video src="/intro.mp4" preload="auto" muted playsInline style={{ display: 'none' }} />
