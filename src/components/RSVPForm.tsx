@@ -56,7 +56,7 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ inviteeName = '', eventName 
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-6 relative py-12 sm:py-20 flex flex-col items-center">
+    <div className="max-w-4xl mx-auto px-6 relative py-4 sm:py-20 flex flex-col items-center">
       
       {/* Pearl Garland SVG - Creative Touch */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[150vw] sm:w-[120vw] max-w-none pointer-events-none select-none z-0 opacity-60">
@@ -100,7 +100,7 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ inviteeName = '', eventName 
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 1, ease: "easeOut" }}
-        className="relative z-10 w-full max-w-lg bg-[#FDFBF7]/95 backdrop-blur-xl p-10 sm:p-14 rounded-t-[10rem] border-x-[1.5px] border-t-[1.5px] border-[#ea6a29]/30 shadow-2xl text-center mt-20"
+        className="relative z-10 w-full max-w-lg bg-[#FDFBF7]/95 backdrop-blur-xl px-8 pt-12 pb-8 sm:p-14 rounded-t-[10rem] border-x-[1.5px] border-t-[1.5px] border-[#ea6a29]/30 shadow-2xl text-center mt-14 sm:mt-20"
       >
         {/* Lace decoration inside */}
         <div className="absolute inset-0 border border-[#ea6a29]/15 rounded-t-[10rem] m-2 pointer-events-none" />
@@ -117,7 +117,7 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ inviteeName = '', eventName 
           RSVP
         </h2>
 
-        <p className="text-[#ea6a29]/70 font-sans text-sm sm:text-base leading-relaxed mb-10 relative z-10">
+        <p className="text-[#ea6a29]/70 font-sans text-sm sm:text-base leading-relaxed mb-7 sm:mb-10 relative z-10">
           {inviteeName
             ? `Dear ${inviteeName}, please let us know if you will join us.`
             : `Please let us know if you will join our celebration.`
@@ -155,7 +155,7 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ inviteeName = '', eventName 
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 onSubmit={handleSubmit}
-                className="space-y-8"
+                className="space-y-6 sm:space-y-8"
               >
                 <div>
                   <input
@@ -217,7 +217,7 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ inviteeName = '', eventName 
                   )}
                 </AnimatePresence>
 
-                <div className="pt-6">
+                <div className="pt-2 sm:pt-6">
                   <button
                     disabled={status === 'loading'}
                     type="submit"

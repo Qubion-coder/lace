@@ -16,20 +16,48 @@ export const ThankYouSection = () => {
     let lastX = 0;
     let lastY = 0;
 
+    let initialized = false;
+    let lastWidth = 0;
+    let lastHeight = 0;
+
     const initCanvas = () => {
       const rect = canvas.getBoundingClientRect();
       if (rect.width === 0) {
         setTimeout(initCanvas, 100);
         return;
       }
-      
+
+      // Mobile address bar show/hide fires resize without changing the card size —
+      // skip so the scratched area is not wiped.
+      if (initialized && Math.abs(rect.width - lastWidth) < 1 && Math.abs(rect.height - lastHeight) < 1) {
+        return;
+      }
+
       const dpr = window.devicePixelRatio || 1;
+
+      // Real size change (e.g. rotation): keep what was already scratched.
+      if (initialized) {
+        const snapshot = document.createElement('canvas');
+        snapshot.width = canvas.width;
+        snapshot.height = canvas.height;
+        snapshot.getContext('2d')?.drawImage(canvas, 0, 0);
+
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.drawImage(snapshot, 0, 0, rect.width, rect.height);
+        lastWidth = rect.width;
+        lastHeight = rect.height;
+        return;
+      }
+
       canvas.width = rect.width * dpr;
       canvas.height = rect.height * dpr;
-      
-      ctx.scale(dpr, dpr);
-      canvas.style.width = `${rect.width}px`;
-      canvas.style.height = `${rect.height}px`;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      initialized = true;
+      lastWidth = rect.width;
+      lastHeight = rect.height;
 
       // Fill with theme color
       ctx.fillStyle = '#ea6a29';
@@ -122,7 +150,7 @@ export const ThankYouSection = () => {
   return (
     <section className="relative pt-6 md:pt-10 pb-10 md:pb-16 px-4 overflow-hidden z-20 bg-brand-blush">
       {/* Outer elegant container - Full Pill Shape */}
-      <div className="relative w-full max-w-[600px] mx-auto bg-[#ea6a29] rounded-[10rem] sm:rounded-[15rem] overflow-hidden shadow-[0_30px_60px_rgba(234,106,41,0.25)] pb-16 border-[8px] border-[#ea6a29]/50 bg-clip-padding">
+      <div className="relative w-full max-w-[600px] mx-auto bg-[#ea6a29] rounded-[10rem] sm:rounded-[15rem] overflow-hidden shadow-[0_30px_60px_rgba(234,106,41,0.25)] border-[8px] border-[#ea6a29]/50 bg-clip-padding pb-4 sm:pb-16">
         
         {/* Subtle background ambient flowers (replacing cherubs) */}
         <img 
@@ -136,11 +164,11 @@ export const ThankYouSection = () => {
           className="absolute top-40 -right-20 w-80 opacity-10 pointer-events-none mix-blend-overlay -rotate-45" 
         />
 
-        <section className="relative pt-12 md:pt-20 pb-8 px-6 text-center z-10">
+        <section className="relative pt-10 md:pt-20 pb-2 sm:pb-8 px-6 text-center z-10">
           <div className="max-w-md mx-auto flex flex-col items-center">
             
             {/* Top Floral Ornament */}
-            <div className="w-24 sm:w-32 mb-6">
+            <div className="w-20 sm:w-32 mb-4 sm:mb-6">
               <img 
                 src="/ChatGPT Image Sep 3, 2026, 03_34_18 AM.png" 
                 alt="Floral Ornament" 
@@ -150,10 +178,9 @@ export const ThankYouSection = () => {
             </div>
             
             {/* Script Text matching the image */}
-            <h2 className="font-['Pinyon_Script',_cursive] text-5xl md:text-6xl text-[#FDFBF7] leading-[1.2] mt-2 mb-8 px-2 drop-shadow-md">
-              We're so happy to <br />
-              celebrate this day <br />
-              with you.
+            <h2 className="font-['Pinyon_Script',_cursive] text-[1.75rem] sm:text-4xl md:text-5xl text-[#FDFBF7] leading-[1.25] mt-2 mb-5 md:mb-8 px-2 drop-shadow-md">
+              We're so happy to celebrate <br />
+              this day with you.
             </h2>
 
             <p className="font-['Cormorant_Garamond',_serif] text-sm md:text-base text-[#FDFBF7]/90 leading-relaxed tracking-wider font-semibold">
@@ -162,7 +189,7 @@ export const ThankYouSection = () => {
           </div>
         </section>
 
-        <section className="relative overflow-hidden pt-6 pb-12 z-10">
+        <section className="relative overflow-hidden pt-0 pb-4 sm:pt-6 sm:pb-12 z-10">
           <div className="w-full max-w-[420px] md:max-w-[480px] mx-auto px-4">
             
             <div 

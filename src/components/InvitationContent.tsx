@@ -104,7 +104,7 @@ export function InvitationContent({
 
 
       <DeferredMount active={active} delay={420} minHeight="30vh">
-        <div className="py-24 sm:py-32 bg-brand-blush relative overflow-hidden">
+        <div className="py-8 sm:py-32 bg-brand-blush relative overflow-hidden">
           <RSVPForm inviteeName={fullInviteeName} eventName={eventLabel} eventParam={eventParam} />
         </div>
       </DeferredMount>
@@ -114,12 +114,12 @@ export function InvitationContent({
       </DeferredMount>
 
       <DeferredMount active={active} delay={520}>
-        <footer className="py-12 bg-white border-t border-brand-lavender/20 text-center relative overflow-hidden mt-10">
+        <footer className="py-12 bg-white border-t border-brand-lavender/20 text-center relative overflow-hidden mt-4 sm:mt-10">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-brand-lavender/10 blur-[80px] rounded-full pointer-events-none" />
           <Heart className="w-6 h-6 mx-auto mb-6 text-brand-plum fill-brand-lavender/20" />
           <p className="font-names text-4xl sm:text-5xl text-stone-800 mb-2">Bagya & Avishka</p>
           <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.4em] font-sans text-stone-400 font-semibold block mb-4">
-            October 22, 2026
+            April 5, 2027
           </span>
           
           <div className="w-12 h-[1px] bg-brand-lavender/30 mx-auto my-6" />
